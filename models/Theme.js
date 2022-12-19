@@ -18,7 +18,7 @@ const themeSchema = new Schema({
         type: Types.ObjectId,
         ref: 'Post'
     }]
-}, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
+}, { timestamps: { createdAt: 'createdAt' } });
 
 const Theme = model('Theme', themeSchema);
 
