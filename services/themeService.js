@@ -1,4 +1,5 @@
 const Theme = require("../models/Theme");
+const Post = require('../models/Post');
 
 function getAllthemes() {
     return Theme.find({});
@@ -11,8 +12,10 @@ function getThemeById(id) {
 function addTheme(data) {
     return Theme.create(data);
 }
-
-function postComment(themeId, comment) {
+function createPost(content) {
+    return Post.create(content);
+}
+function addPostToTheme(themeId, comment) {
     return Theme.findByIdAndUpdate(themeId, comment);
 }
 
@@ -20,5 +23,6 @@ module.exports = {
     getAllthemes,
     getThemeById,
     addTheme,
-    postComment
+    createPost,
+    addPostToTheme
 }

@@ -1,10 +1,10 @@
-const { getAllthemes, getThemeById, addTheme, postComment } = require('../services/themeService');
+const { getAllthemes, getThemeById, addTheme, createPost, addPostToTheme } = require('../services/themeService');
 
 const themeController = require('express').Router();
 
 themeController.get('/', async (req, res) => {
     try {
-        const themes = await getAllthemes().populate('author');
+        const themes = await getAllthemes().populate('author').populate({ path: 'posts', populate: { path: 'author' } });
         res.status(200).send(themes);
     } catch (err) {
         res.send(err);
@@ -13,7 +13,7 @@ themeController.get('/', async (req, res) => {
 
 themeController.get('/:themeId', async (req, res) => {
     try {
-        const themeContent = await getThemeById(req.params.themeId).populate('author');
+        const themeContent = await getThemeById(req.params.themeId).populate('author').populate({ path: 'posts', populate: { path: 'author' } });
         res.status(200).send(themeContent);
     } catch (err) {
         res.send(err);
@@ -30,13 +30,20 @@ themeController.post('/', async (req, res) => {
     }
 });
 
-themeController.post('/:themeId/comment', async (req, res) => {
-    const content = { ...req.body }
+themeController.post('/:themeId/comments', async (req, res) => {
+    const postData = {
+        comment: req.body.comment,
+        author: req.user._id,
+        theme: req.params.themeId
+    }
     try {
-        const comment = await postComment(req.params.themeId, content);
-        res.status(200).send(comment);
+        const post = await createPost(postData);
+        const theme = await getThemeById(req.params.themeId);
+        theme.posts.push(post._id);
+        await addPostToTheme(theme._id, theme);
     } catch (err) {
         res.send(err);
+        console.error(err);
     }
 });
 
