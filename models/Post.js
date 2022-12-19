@@ -2,7 +2,7 @@ const { Schema, model, Types } = require('mongoose');
 
 
 const postSchema = new Schema({
-    content: {
+    comment: {
         type: String,
         reduired: true
     },
@@ -14,7 +14,7 @@ const postSchema = new Schema({
         type: Types.ObjectId,
         ref: 'Theme'
     }
-}, { timestamps: { updatedAt: 'updatedAt', createdAt: 'createdAt' } });
+}, { timestamps: { createdAt: 'createdAt' } });
 
 const Post = model('Post', postSchema);
 
