@@ -39,6 +39,9 @@ themeController.post('/:themeId/comments', async (req, res) => {
     try {
         const post = await createPost(postData);
         const theme = await getThemeById(req.params.themeId);
+        if (!theme.posts) {
+            theme.posts = [];
+        }
         theme.posts.push(post._id);
         await addPostToTheme(theme._id, theme);
     } catch (err) {
