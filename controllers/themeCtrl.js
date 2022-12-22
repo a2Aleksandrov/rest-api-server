@@ -21,12 +21,19 @@ themeController.get('/:themeId', async (req, res) => {
 });
 
 themeController.post('/', async (req, res) => {
-    const data = { ...req.body };
+    const themeData = {
+        title: req.body.title,
+        content: req.body.content,
+        author: req.user._id
+    };
+    console.log(themeData);
     try {
-        const newTheme = await addTheme(req.params.themeId, data);
+        const newTheme = await addTheme(themeData);
+        console.log(newTheme);
         res.status(200).send(newTheme);
     } catch (err) {
         res.send(err);
+        console.log(err);
     }
 });
 
